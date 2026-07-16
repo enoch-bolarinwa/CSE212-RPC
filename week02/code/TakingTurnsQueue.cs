@@ -10,9 +10,7 @@
 public class TakingTurnsQueue
 {
     private readonly PersonQueue _people = new();
-
     public int Length => _people.Length;
-
     /// <summary>
     /// Add new people to the queue with a name and number of turns
     /// </summary>
@@ -23,7 +21,6 @@ public class TakingTurnsQueue
         var person = new Person(name, turns);
         _people.Enqueue(person);
     }
-
     /// <summary>
     /// Get the next person in the queue and return them. The person should
     /// go to the back of the queue again unless the turns variable shows that they 
@@ -40,16 +37,19 @@ public class TakingTurnsQueue
         else
         {
             Person person = _people.Dequeue();
-            if (person.Turns > 1)
+            if (person.Turns <= 0)
+            {
+                // Infinite turns: re-enqueue unchanged, never decrement.
+                _people.Enqueue(person);
+            }
+            else if (person.Turns > 1)
             {
                 person.Turns -= 1;
                 _people.Enqueue(person);
             }
-
             return person;
         }
     }
-
     public override string ToString()
     {
         return _people.ToString();
